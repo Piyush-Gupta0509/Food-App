@@ -35,10 +35,11 @@ userRouter
   .route("/:name")
   .get(getUserById);
 
-// authRouter
-//   .route("/signup")
-//   .get()
-//   .post();
+authRouter
+  .route("/signup")
+  .get(getSignUp)
+  .post(postSignUp)
+  
 
 
 function getUser(req, res) {
@@ -86,4 +87,16 @@ function getUserById(req, res) {
   res.json({ msg: "user id is ", obj: req.params });
 }
 
+function getSignUp(req, res){
+    res.sendFile('/views/index.html',{root:__dirname});
+}
+
+function postSignUp(req, res){
+    let obj=req.body;
+    console.log('backend',obj);
+    res.json({
+        message:"user signed up",
+        data:obj
+    });
+}
 app.listen(3000);
