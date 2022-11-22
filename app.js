@@ -37,10 +37,14 @@ userRouter
 
 authRouter
   .route("/signup")
-  .get(getSignUp)
+  .get(middleware,getSignUp)
   .post(postSignUp)
   
-
+//middleware intro
+function middleware(req,res,next){
+    console.log("inside middleware");
+    next();
+}
 
 function getUser(req, res) {
   console.log(req.query);
