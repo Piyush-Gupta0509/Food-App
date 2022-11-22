@@ -31,20 +31,12 @@ userRouter
   .patch(updateUser)
   .delete(deleteUser);
 
-userRouter
-  .route("/:name")
-  .get(getUserById);
+userRouter.route("/:name").get(getUserById);
 
 authRouter
   .route("/signup")
-  .get(middleware,getSignUp)
-  .post(postSignUp)
-  
-//middleware intro
-function middleware(req,res,next){
-    console.log("inside middleware");
-    next();
-}
+  .get(middleware1, getSignUp, middleware2)
+  .post(postSignUp);
 
 function getUser(req, res) {
   console.log(req.query);
@@ -91,16 +83,28 @@ function getUserById(req, res) {
   res.json({ msg: "user id is ", obj: req.params });
 }
 
-function getSignUp(req, res){
-    res.sendFile('/views/index.html',{root:__dirname});
+//middleware intro
+function middleware1(req, res, next) {
+  console.log("inside middleware1");
+  next();
 }
 
-function postSignUp(req, res){
-    let obj=req.body;
-    console.log('backend',obj);
-    res.json({
-        message:"user signed up",
-        data:obj
-    });
+function middleware2(req, res) {
+  console.log("inside middleware2 req/res cycle end here");
+  res.sendFile("/views/index.html", { root: __dirname });
+}
+
+function getSignUp(req, res, next) {
+  console.log("inside getSignUp");
+  next();
+}
+
+function postSignUp(req, res) {
+  let obj = req.body;
+  console.log("backend", obj);
+  res.json({
+    message: "user signed up",
+    data: obj,
+  });
 }
 app.listen(3000);
