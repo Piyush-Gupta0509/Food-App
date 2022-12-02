@@ -40,24 +40,45 @@ authRouter
   .get(middleware1, getSignUp, middleware2)
   .post(postSignUp);
 
-function getUser(req, res) {
+async function getUser(req, res) {
   console.log(req.query);
   let { name, age } = req.query;
   // let filteredData=user.filter(userObj => {
   //     return (userObj.name==name && userObj.age==age)
   // })
   // res.send(filteredData);
-  res.send(user);
+  // res.send(user);
+
+  //get all users from db
+  let allUsers = await userModel.find();
+
+  res.json({ msg: "users retrieved", allUsers });
+  // console.log("getUser called ");
+  // next();
 }
 
-function postUser(req, res) {
-  console.log(req.body.Name);
-  //then i can put this in db
-  user.push(req.body);
-  res.json({
-    message: "Data received successfully",
-    user: req.body,
-  });
+async function postUser(req, res) {
+  // console.log(req.body.Name);
+  // //then i can put this in db
+  // user.push(req.body);
+  // res.json({
+  //   message: "Data received successfully",
+  //   user: req.body,
+  // });
+
+  try {
+    let data = req.body;
+    let user = await userModel.create(data);
+    console.log(data);
+    res.json({
+      msg: "user signed up",
+      user,
+    });
+  } catch (err) {
+    res.json({
+      err: err.message,
+    });
+  }
 }
 
 function updateUser(req, res) {
@@ -146,13 +167,13 @@ const userSchema = mongoose.Schema({
 //models
 const userModel = mongoose.model("userModel", userSchema);
 
-(async function createUser() {
-  let user = {
-    name: "Piyush",
-    email: "abc@gmail.com",
-    password: "12345678",
-    confirmPassword: "12345678",
-  };
-  let data = await userModel.create(user);
-  console.log(data);
-})();
+// (async function createUser() {
+//   let user = {
+//     name: "Piyush",
+//     email: "abc@gmail.com",
+//     password: "12345678",
+//     confirmPassword: "12345678",
+//   };
+//   let data = await userModel.create(user);
+//   console.log(data);
+// })();
