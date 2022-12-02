@@ -41,8 +41,8 @@ authRouter
   .post(postSignUp);
 
 async function getUser(req, res) {
-  console.log(req.query);
-  let { name, age } = req.query;
+  //console.log(req.query);
+  //let { name, age } = req.query;
   // let filteredData=user.filter(userObj => {
   //     return (userObj.name==name && userObj.age==age)
   // })
@@ -87,7 +87,10 @@ async function updateUser(req, res) {
   // for (key in dataToBeUpdated) {
   //   user[key] = dataToBeUpdated[key];
   // }
-  let doc = await userModel.findOneAndUpdate({email:"abc@gmail.com"},dataToBeUpdated)
+  let doc = await userModel.findOneAndUpdate(
+    { email: "abc@gmail.com" },
+    dataToBeUpdated
+  );
   res.json({
     message: "data updated succesfully",
   });
@@ -95,7 +98,7 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
   // user = {};
-  let doc= await userModel.deleteOne({email:"@gmail.com"});
+  let doc = await userModel.deleteOne({ email: "@gmail.com" });
   console.log(doc);
   res.json({
     msg: "user has been deleted",
@@ -167,6 +170,13 @@ const userSchema = mongoose.Schema({
   },
 });
 
+userSchema.pre("save", function () {
+  console.log("before saving in db");
+});
+
+userSchema.post("save", function () {
+  console.log("after saving in db");
+});
 //models
 const userModel = mongoose.model("userModel", userSchema);
 
