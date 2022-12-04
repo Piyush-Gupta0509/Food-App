@@ -7,6 +7,39 @@ authRouter
   .get(middleware1, getSignUp, middleware2)
   .post(postSignUp);
 
+authRouter
+  .route("/login")
+  .post(loginUser)
+
+  async function loginUser(req,res){
+    try{
+        let {email,password} = req.body;
+        let user = await userModel.findOne({email: email})
+        if(user){
+            // check if password matches
+            // bcrypt should be done to make it more safe
+            if(password==user.password){
+                res.json({
+                    msg:"user loggedIn "
+                })
+            }else{
+                res.json({
+                    msg:"Wrong Crendentials"
+                })
+            }
+
+        }else{
+        res.json({
+            msg:"user not found"
+        })
+        }
+    }catch{
+        res.json({
+            msg:err.message
+        })
+    }
+    
+  }
 
   function middleware1(req, res, next) {
     console.log("inside middleware1");
